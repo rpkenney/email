@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Email Scrubber</title>
+</head>
+<body>
+    <h1>Email Scrubber</h1>
+    <button onclick="getRecords()">Get Records</button>
+    <div id="results"></div>
+    <script>
+        async function getRecords() {
+            const response = await fetch('/api/records');
+            const data = await response.json();
+            document.getElementById('results').innerHTML = data.map(r => 
+                `${r.address}: ${r.count} <button onclick="deleteAll('${r.address}')">Delete</button><br>`
+            ).join('');
+        }
+        async function deleteAll(email) {
+            await fetch('/api/delete', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email})});
+        }
+    </script>
+</body>
+</html>
